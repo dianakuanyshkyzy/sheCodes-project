@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 const VolunteerSection = () => {
   return (
-    <div className="relative h-screen flex flex-col items-center justify-start pt-20 text-center text-navy-700">
+    <div className="font-montserrat relative h-screen flex flex-col items-center justify-start pt-20 text-center text-navy-700">
       <div className="absolute inset-0 z-0">
         <Image src={background} alt="City skyline" className="w-full h-full object-cover" />
       </div>
@@ -23,7 +23,7 @@ const VolunteerSection = () => {
             type="text"
             placeholder="Хочу быть волонтером в"
             className="w-full py-2 px-4 pr-10 rounded-full border border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            style={{ color: 'black' }} 
+            style={{ color: '4A4A4A' }} 
           />
           <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
         </div>
