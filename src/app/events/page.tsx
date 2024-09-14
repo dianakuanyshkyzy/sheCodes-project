@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { Search } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import Header from '../components/Header';
 import Event from '../components/Event';
 
@@ -15,21 +15,33 @@ interface EventData {
   rewards: number;
   volunteersNeeded: number;
   date: string;
+  skillsNeeded: string[]; // Assuming skills are stored in this array
 }
 
 const SearchPage = () => {
   const searchParams = useSearchParams(); // Use useSearchParams instead of useRouter
   const category = searchParams.get('category'); // Get the category from the query params
-
+  const [filteredEvents, setFilteredEvents] = useState<EventData[]>([]);
+  const [query, setQuery] = useState('');
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [activeButton, setActiveButton] = useState('online');
   const [activeSkillTag, setActiveSkillTag] = useState<string | null>(null);
+  const [location, setLocation] = useState<string | null>(null);
+  const [ageFilter, setAgeFilter] = useState(false); // 18+ filter
 
-  const tags = ['Эко - мероприятия', 'Книжный клуб', 'Приют для животных', 'Репетиторство', 'Другое'];
+  // const tags = ['Эко - мероприятия', 'Книжный клуб', 'Приют для животных', 'Репетиторство', 'Другое'];
+
+  const tags = [
+    { displayName: 'Эко - мероприятия', category: 'эко' },
+    { displayName: 'Книжный клуб', category: 'книга' },
+    { displayName: 'Приют для животных', category: 'животные' },
+    { displayName: 'Репетиторство', category: 'наставничество' },
+    { displayName: 'Другое', category: 'другое' }
+  ];
   const skills = ['Коммуникабельность', 'Английский язык', 'Программирование', 'Маркетинг', 'Графический дизайн'];
 
   const [events, setEvents] = useState<EventData[]>([]);
-  const [filteredEvents, setFilteredEvents] = useState<EventData[]>([]);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,10 +52,44 @@ const SearchPage = () => {
       }
       const data = await response.json();
       setEvents(data);
+      setFilteredEvents(data); // Initially show all events
     };
 
     fetchData();
   }, []);
+
+  // Filter function to match multiple criteria
+  const filterEvents = () => {
+    const results = events.filter(event => {
+      const matchesCategory = activeTag ? event.category === activeTag : true;
+      const matchesLocation = location ? event.location.includes(location) : true;
+      const matchesAge = ageFilter ? event.age === ageFilter : true;
+      const matchesQuery = query
+        ? event.name.toLowerCase().includes(query.toLowerCase()) ||
+          event.description.toLowerCase().includes(query.toLowerCase())
+        : true;
+      const matchesSkills = activeSkillTag
+        ? event.skillsNeeded.some(skill => skill.includes(activeSkillTag))
+        : true;
+      const matchesOnlineOffline = activeButton === 'online' || activeButton === 'offline' ? true : false;
+
+      return (
+        matchesCategory &&
+        matchesLocation &&
+        matchesAge &&
+        matchesQuery &&
+        matchesSkills &&
+        matchesOnlineOffline
+      );
+    });
+
+    setFilteredEvents(results); // Update the state with the filtered events
+  };
+
+  useEffect(() => {
+    // Filter events in real-time whenever query or filters change
+    filterEvents();
+  }, [query, activeTag, location, ageFilter, activeSkillTag, activeButton]);
 
   useEffect(() => {
     if (category) {
@@ -53,8 +99,6 @@ const SearchPage = () => {
       setFilteredEvents(events); // If no category is specified, show all events
     }
   }, [category, events]);
-
-
   return (
     <div className="font-montserrat">
       <Header />
@@ -62,23 +106,25 @@ const SearchPage = () => {
       <div className="max-w-7xl my-5 mx-auto py-6 sm:px-6 lg:px-8">
         <div className="flex items-start"> {/* Added items-start to align top */}
           {/* Left sidebar */}
-          <div className="w-1/4 bg-[#EBEAFB] rounded-lg shadow p-4 mr-4 self-start"> {/* Removed h-auto and added self-start */}
+          <div className="w-1/4 bg-[#EBEAFB] rounded-lg shadow p-4 mr-4 self-start">
             <div className='flex justify-between items-center mb-5'>
               <h2 className="text-lg font-semibold">Фильтры поиска</h2>
-              <h5 className="text-[12px] text-[#6258E9]">Сбросить все</h5>
+              <h5 className="text-[12px] text-[#6258E9]" onClick={() => setFilteredEvents(events)}>Сбросить все</h5>
             </div>
             <div className="space-y-4">
               <div className="flex space-x-2">
                 <button className={`px-4 py-2 rounded-full text-sm ${
-                    activeButton === 'online' ? 'bg-indigo-600 text-white': 'bg-white text-gray-700'}`}
-                    onClick={() => setActiveButton('online')}>Онлайн</button>
-
-                <button className={`px-4 py-2 rounded-full text-sm ${
                     activeButton === 'offline' ? 'bg-indigo-600 text-white': 'bg-white text-gray-700'}`}
                     onClick={() => setActiveButton('offline')}>Оффлайн</button>
+                    <button className={`px-4 py-2 rounded-full text-sm ${
+                    activeButton === 'online' ? 'bg-indigo-600 text-white': 'bg-white text-gray-700'}`}
+                    onClick={() => setActiveButton('online')}>Онлайн</button>
               </div>
               <h3 className='text-grey text-sm'>Локация</h3>
-              <select className="w-full p-2 border rounded text-sm">
+              <select
+                className="w-full p-2 border rounded text-sm"
+                onChange={(e) => setLocation(e.target.value)}
+              >
                 <option>Любой регион</option>
                 <option>Астана</option>
                 <option>Алматы</option>
@@ -87,22 +133,28 @@ const SearchPage = () => {
                 <option>Актобе</option>
               </select>
               <div className="flex items-center">
-                <input type="checkbox" id="18plus" className="mr-2" />
+                <input
+                  type="checkbox"
+                  id="18plus"
+                  className="mr-2"
+                  checked={ageFilter}
+                  onChange={() => setAgeFilter(!ageFilter)}
+                />
                 <label htmlFor="18plus" className="text-sm">18+</label>
               </div>
               <h3 className='text-grey text-sm'>Категория</h3>
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
                   <span
-                    key={tag}
+                    key={tag.category}
                     className={`px-3 py-1 rounded-full text-[11px] cursor-pointer ${
-                      activeTag === tag
+                      activeTag === tag.category
                         ? 'bg-indigo-600 text-white' // Active style
                         : 'bg-white text-gray-700'  // Inactive style
                     }`}
-                    onClick={() => setActiveTag(tag)}
+                    onClick={() => setActiveTag(tag.category)}
                   >
-                    {tag}
+                    {tag.displayName}
                   </span>
                 ))}
               </div>
@@ -142,28 +194,23 @@ const SearchPage = () => {
           {/* Main content area */}
           <div className="flex-1">
             <div className="mb-6 relative">
+              {/* Search Input */}
               <input
                 type="text"
-                placeholder="Поиск по названию"
+                placeholder="Поиск по названию или описанию"
                 className="w-full p-2 pl-10 pr-4 border rounded-full"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             </div>
-
-            {/* {events.length > 0 ? (
-              events.map(event => (
-                <Event key={event.id} event={event} />
-              ))
-            ) : (
-              <p>Loading events...</p>
-            )} */}
-
+            {/* Display filtered events */}
             {filteredEvents.length > 0 ? (
               filteredEvents.map(event => (
                 <Event key={event.id} event={event} />
               ))
             ) : (
-              <p>No events found for this category.</p>
+              <p>События не найдены...</p>
             )}
           </div>
         </div>
