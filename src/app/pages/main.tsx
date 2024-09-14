@@ -1,6 +1,5 @@
 import React from 'react';
-import { Search } from 'lucide-react';
-import background from '@/app/public/images/image.svg';
+import {Search } from 'lucide-react';
 import Image from 'next/image';
 
 
@@ -8,7 +7,7 @@ const VolunteerSection = () => {
   return (
     <div className="font-montserrat relative h-screen flex flex-col items-center justify-start pt-20 text-center text-navy-700">
       <div className="absolute inset-0 z-0">
-        <Image src={background} alt="City skyline" className="w-full h-full object-cover" />
+        <Image src="images/image.svg" alt="City skyline" className="w-full h-full object-cover" width={1080} height={1900} />
       </div>
       <div className="z-10 space-y-4">
         <div className="text-amber-400 text-sm">⭐ 1000+ волонтеров</div>

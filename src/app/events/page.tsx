@@ -1,30 +1,57 @@
-"use client"; 
-import React, {useState} from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import Header from '../components/Header';
 import Event from '../components/Event';
 
-const SearchPage = () => {
-    const [activeTag, setActiveTag] = useState<string | null>(null);
-    const [activeButton, setActiveButton] = useState('online');
-    const [activeSkillTag, setActiveSkillTag] = useState<string | null>(null);
+interface EventData {
+  id: number;
+  name: string;
+  description: string;
+  location: string;
+  category: string;
+  age: boolean;
+  rewards: number;
+  volunteersNeeded: number;
+  date: string;
+}
 
-    const tags = ['Эко - мероприятия', 'Книжный клуб', 'Приют для животных', 'Репетиторство', 'Другое'];
-    const skills = ['Коммуникабельность', 'Английский язык', 'Программирование', 'Маркетинг', 'Графический дизайн'];
+const SearchPage = () => {
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [activeButton, setActiveButton] = useState('online');
+  const [activeSkillTag, setActiveSkillTag] = useState<string | null>(null);
+
+  const tags = ['Эко - мероприятия', 'Книжный клуб', 'Приют для животных', 'Репетиторство', 'Другое'];
+  const skills = ['Коммуникабельность', 'Английский язык', 'Программирование', 'Маркетинг', 'Графический дизайн'];
+
+  const [events, setEvents] = useState<EventData[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('/events.json');
+      if (!response.ok) {
+        console.error("Failed to fetch events.json");
+        return;
+      }
+      const data = await response.json();
+      setEvents(data);
+    };
+
+    fetchData();
+  }, []);
 
   return (
-    <div className="min-h-screen font-montserrat">
-    <Header/>
+    <div className="font-montserrat">
+      <Header />
       {/* Main content */}
       <div className="max-w-7xl my-5 mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="flex">
+        <div className="flex items-start"> {/* Added items-start to align top */}
           {/* Left sidebar */}
-          <div className="w-1/4 bg-[#EBEAFB] rounded-lg shadow p-4 mr-4">
-          <div className='flex justify-between items-center mb-5'>
-            <h2 className="text-lg font-semibold">Фильтры поиска</h2>
-            <h5 className="text-[12px] text-[#6258E9]">Сбросить все</h5>
-          </div>
-            {/* <h2 className="text-lg font-semibold mb-4">Фильтры поиска</h2> */}
+          <div className="w-1/4 bg-[#EBEAFB] rounded-lg shadow p-4 mr-4 self-start"> {/* Removed h-auto and added self-start */}
+            <div className='flex justify-between items-center mb-5'>
+              <h2 className="text-lg font-semibold">Фильтры поиска</h2>
+              <h5 className="text-[12px] text-[#6258E9]">Сбросить все</h5>
+            </div>
             <div className="space-y-4">
               <div className="flex space-x-2">
                 <button className={`px-4 py-2 rounded-full text-sm ${
@@ -48,7 +75,6 @@ const SearchPage = () => {
                 <input type="checkbox" id="18plus" className="mr-2" />
                 <label htmlFor="18plus" className="text-sm">18+</label>
               </div>
-
               <h3 className='text-grey text-sm'>Категория</h3>
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
@@ -109,7 +135,13 @@ const SearchPage = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             </div>
 
-            <Event/>
+            {events.length > 0 ? (
+              events.map(event => (
+                <Event key={event.id} event={event} />
+              ))
+            ) : (
+              <p>Loading events...</p>
+            )}
           </div>
         </div>
       </div>
