@@ -1,8 +1,8 @@
 import Image from "next/image";
-import VolunteerSection from "./pages/main";
+import Header from "./components/Header";
 
 export default function Home() {
   return (
-    <VolunteerSection />
+    <Header />
   );
 }

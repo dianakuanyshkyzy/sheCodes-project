@@ -25,11 +25,3 @@ body {
     text-wrap: balance;
   }
 }
-input::placeholder {
-  color: #000000; /* Dark gray for the placeholder */
-  opacity: 1; /* Ensure it's not transparent */
-}
-
-input {
-  color: #4A4A4A; /* Dark gray for the typed text */
-}
