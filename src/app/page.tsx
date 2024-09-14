@@ -4,9 +4,6 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <main className="text-center">
-       
-      </main>
     </div>
   );
 }
