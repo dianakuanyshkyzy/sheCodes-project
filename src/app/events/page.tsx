@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search } from 'lucide-react';
 import Header from '../components/Header';
+import Event from '../components/Event';
 
 const SearchPage = () => {
   return (
@@ -74,20 +75,7 @@ const SearchPage = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             </div>
 
-            {/* Search result */}
-            <div className="bg-[#EBEAFB] rounded-lg shadow p-4">
-              <h3 className="text-lg font-semibold">Ищем волонтеров для Алекс</h3>
-              <p className="text-sm text-gray-500">Single Family</p>
-              <div className="flex flex-wrap gap-2 mt-2">
-                <span className="bg-gray-200 px-2 py-1 rounded-full text-xs">Специальные мероприятия</span>
-                <span className="bg-gray-200 px-2 py-1 rounded-full text-xs">Занятия</span>
-                <span className="bg-gray-200 px-2 py-1 rounded-full text-xs">16+</span>
-              </div>
-              <div className="flex justify-between items-center mt-4">
-                <span className="text-sm text-gray-500">Срок окончания набора</span>
-                <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm font-semibold">1 1300</span>
-              </div>
-            </div>
+            <Event/>
           </div>
         </div>
       </div>
