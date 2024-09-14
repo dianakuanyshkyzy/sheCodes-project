@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 
 const Header = () => {
@@ -19,7 +20,7 @@ const Header = () => {
               <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat">Книги</span>
             </Link>
             <Link href="/contact">
-              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat">Университеты</span>
+              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat">Животные</span>
             </Link>
             <Link href="/contact">
               <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat">Менторства</span>
@@ -33,10 +34,14 @@ const Header = () => {
             <button className=" font-montserrat font-bold gap-2.5 self-stretch px-5 py-3 text-[14px] text-indigo-500 whitespace-nowrap rounded-md bg-slate-100">
                 Авторизация
             </button>
+
+            <Link href="/events">
             <button className=" font-montserrat font-bold gap-2.5 self-stretch px-5 py-3 text-[14px] text-white bg-indigo-500 rounded-md ">
                 Поиск Мероприятий
             </button>
+            </Link>
             </div>
+            
         </div>
       </div>
     </header>
