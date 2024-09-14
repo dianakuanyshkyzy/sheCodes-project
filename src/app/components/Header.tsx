@@ -13,20 +13,30 @@ const Header = () => {
           </div>
 
           <nav className="hidden md:flex space-x-10">
-            <Link href="/about">
-              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat">Эко</span>
+          <Link href={{ pathname: '/events', query: { category: 'эко' } }}>
+              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat cursor-pointer">
+                Эко
+              </span>
             </Link>
-            <Link href="/services">
-              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat">Книги</span>
+            <Link href={{ pathname: '/events', query: { category: 'книга' } }}>
+              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat cursor-pointer">
+                Книги
+              </span>
             </Link>
-            <Link href="/contact">
-              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat">Животные</span>
+            <Link href={{ pathname: '/events', query: { category: 'животные' } }}>
+              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat cursor-pointer">
+                Животные
+              </span>
             </Link>
-            <Link href="/contact">
-              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat">Менторства</span>
+            <Link href={{ pathname: '/events', query: { category: 'наставничество' } }}>
+              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat cursor-pointer">
+                Менторства
+              </span>
             </Link>
-            <Link href="/contact">
-              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat">Другое</span>
+            <Link href={{ pathname: '/events', query: { category: 'другое' } }}>
+              <span className="text-[#18191F] font-normal text-[15px] leading-[22px] font-montserrat cursor-pointer">
+                Другое
+              </span>
             </Link>
           </nav>
 

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Search } from 'lucide-react';
 import Header from '../components/Header';
 import Event from '../components/Event';
@@ -17,6 +18,9 @@ interface EventData {
 }
 
 const SearchPage = () => {
+  const searchParams = useSearchParams(); // Use useSearchParams instead of useRouter
+  const category = searchParams.get('category'); // Get the category from the query params
+
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [activeButton, setActiveButton] = useState('online');
   const [activeSkillTag, setActiveSkillTag] = useState<string | null>(null);
@@ -25,6 +29,7 @@ const SearchPage = () => {
   const skills = ['Коммуникабельность', 'Английский язык', 'Программирование', 'Маркетинг', 'Графический дизайн'];
 
   const [events, setEvents] = useState<EventData[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<EventData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,6 +44,16 @@ const SearchPage = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (category) {
+      const filtered = events.filter(event => event.category === category);
+      setFilteredEvents(filtered);
+    } else {
+      setFilteredEvents(events); // If no category is specified, show all events
+    }
+  }, [category, events]);
+
 
   return (
     <div className="font-montserrat">
@@ -135,12 +150,20 @@ const SearchPage = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             </div>
 
-            {events.length > 0 ? (
+            {/* {events.length > 0 ? (
               events.map(event => (
                 <Event key={event.id} event={event} />
               ))
             ) : (
               <p>Loading events...</p>
+            )} */}
+
+            {filteredEvents.length > 0 ? (
+              filteredEvents.map(event => (
+                <Event key={event.id} event={event} />
+              ))
+            ) : (
+              <p>No events found for this category.</p>
             )}
           </div>
         </div>
