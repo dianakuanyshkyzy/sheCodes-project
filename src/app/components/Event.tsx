@@ -4,7 +4,7 @@ import points from '@/app/public/images/points.svg';
 
 const Event = () => {
     return (
-        <div className="bg-[#EBEAFB] rounded-lg shadow p-6 flex gap-7 pr-10">
+        <div className="bg-[#F8F1EF] rounded-lg shadow p-6 flex gap-7 pr-10">
             <div className="relative w-[250px] h-[230px] rounded-[20px] overflow-hidden">
                 <img src="https://static.bntu.by/bntu/new/news/uploads/fast/541_2.jpg"
                 alt="Example image"
