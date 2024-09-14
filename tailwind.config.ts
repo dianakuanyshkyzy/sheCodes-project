@@ -16,6 +16,9 @@ const config: Config = {
         secondary: '#f4dede',
         accent: '#f68142',
       },
+      fontFamily: {
+        montserrat: ['Montserrat', 'sans-serif'],  // Add Montserrat here
+      },
     },
   },
   plugins: [],
