@@ -37,6 +37,11 @@ const VolunteerSection = () => {
     fetchEvents();
   }, []);
   
+  useEffect(() => {
+    console.log(filteredEvents);
+  }, [filteredEvents]);
+
+  
 const handleSearch = async () => {
   if (!inputText.trim()) {
     setFilteredEvents(events); // If input is empty, show all events
