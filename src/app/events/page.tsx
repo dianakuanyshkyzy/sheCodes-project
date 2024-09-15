@@ -20,6 +20,8 @@ interface EventData {
 
 const SearchPage = () => {
   const searchParams = useSearchParams(); // Use useSearchParams instead of useRouter
+  const idsParam = searchParams.get('ids')?.split(',');
+
   const category = searchParams.get('category'); // Get the category from the query params
   const [filteredEvents, setFilteredEvents] = useState<EventData[]>([]);
   const [query, setQuery] = useState('');
@@ -28,8 +30,6 @@ const SearchPage = () => {
   const [activeSkillTag, setActiveSkillTag] = useState<string | null>(null);
   const [location, setLocation] = useState<string | null>(null);
   const [ageFilter, setAgeFilter] = useState(false); // 18+ filter
-
-  // const tags = ['Эко - мероприятия', 'Книжный клуб', 'Приют для животных', 'Репетиторство', 'Другое'];
 
   const tags = [
     { displayName: 'Эко - мероприятия', category: 'эко' },
@@ -45,18 +45,29 @@ const SearchPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/events.json');
-      if (!response.ok) {
-        console.error("Failed to fetch events.json");
-        return;
+      try {
+        const response = await fetch('/events.json');
+        const data = await response.json();
+        setEvents(data);
+      } catch (error) {
+        console.error("Ошибка загрузки событий:", error);
       }
-      const data = await response.json();
-      setEvents(data);
-      setFilteredEvents(data); // Initially show all events
     };
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    let filtered = events;
+
+    if (idsParam) {
+      filtered = events.filter(event => idsParam.includes(event.id.toString()));
+    } else if (category) {
+      filtered = events.filter(event => event.category === category);
+    }
+
+    setFilteredEvents(filtered);
+  }, [idsParam, category, events]);
 
   // Filter function to match multiple criteria
   const filterEvents = () => {
@@ -91,14 +102,8 @@ const SearchPage = () => {
     filterEvents();
   }, [query, activeTag, location, ageFilter, activeSkillTag, activeButton]);
 
-  useEffect(() => {
-    if (category) {
-      const filtered = events.filter(event => event.category === category);
-      setFilteredEvents(filtered);
-    } else {
-      setFilteredEvents(events); // If no category is specified, show all events
-    }
-  }, [category, events]);
+ 
+
   return (
     <div className="font-montserrat">
       <Header />
